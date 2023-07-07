@@ -1,1 +1,104 @@
-[]
+[
+    {
+        "_id": "dc5321bc-d6af-42f7-b0c0-397a3839ad8c",
+        "colId": "history",
+        "containerId": "",
+        "name": "https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=t1ojvs76w1fxairu7jqtq7gmfm5wbq&redirect_uri=http://localhost:3000/auth/callback&scope=channel%3read+channel%3edit&state=c3ab8aa609ea11e793ae92361f002671",
+        "url": "https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=t1ojvs76w1fxairu7jqtq7gmfm5wbq&redirect_uri=http://localhost:3000/auth/callback&scope=channel%3read+channel%3edit&state=c3ab8aa609ea11e793ae92361f002671",
+        "method": "GET",
+        "sortNum": 0,
+        "created": "2023-07-01T14:21:39.435Z",
+        "modified": "2023-07-01T14:21:39.435Z",
+        "headers": [
+            {
+                "name": "Accept",
+                "value": "*/*",
+                "isDisabled": true
+            },
+            {
+                "name": "User-Agent",
+                "value": "Thunder Client (https://www.thunderclient.com)",
+                "isDisabled": true
+            }
+        ],
+        "params": [
+            {
+                "name": "response_type",
+                "value": "code",
+                "isPath": false
+            },
+            {
+                "name": "client_id",
+                "value": "t1ojvs76w1fxairu7jqtq7gmfm5wbq",
+                "isPath": false
+            },
+            {
+                "name": "redirect_uri",
+                "value": "http://localhost:3000/auth/callback",
+                "isPath": false
+            },
+            {
+                "name": "scope",
+                "value": "channel%3read+channel%3edit",
+                "isPath": false
+            },
+            {
+                "name": "state",
+                "value": "c3ab8aa609ea11e793ae92361f002671",
+                "isPath": false
+            }
+        ],
+        "tests": []
+    },
+    {
+        "_id": "b4f6867d-4264-4c1e-b720-748e5fc9c723",
+        "colId": "history",
+        "containerId": "",
+        "name": "https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=t1ojvs76w1fxairu7jqtq7gmfm5wbq&redirect_uri=http://localhost:3000/auth/callback&scope=chat:read chat:edit&state=c3ab8aa609ea11e793ae92361f002671",
+        "url": "https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=t1ojvs76w1fxairu7jqtq7gmfm5wbq&redirect_uri=http://localhost:3000/auth/callback&scope=chat:read chat:edit&state=c3ab8aa609ea11e793ae92361f002671",
+        "method": "GET",
+        "sortNum": 0,
+        "created": "2023-07-01T14:22:33.163Z",
+        "modified": "2023-07-01T14:22:33.163Z",
+        "headers": [
+            {
+                "name": "Accept",
+                "value": "*/*",
+                "isDisabled": true
+            },
+            {
+                "name": "User-Agent",
+                "value": "Thunder Client (https://www.thunderclient.com)",
+                "isDisabled": true
+            }
+        ],
+        "params": [
+            {
+                "name": "response_type",
+                "value": "code",
+                "isPath": false
+            },
+            {
+                "name": "client_id",
+                "value": "t1ojvs76w1fxairu7jqtq7gmfm5wbq",
+                "isPath": false
+            },
+            {
+                "name": "redirect_uri",
+                "value": "http://localhost:3000/auth/callback",
+                "isPath": false
+            },
+            {
+                "name": "scope",
+                "value": "chat:read chat:edit",
+                "isPath": false
+            },
+            {
+                "name": "state",
+                "value": "c3ab8aa609ea11e793ae92361f002671",
+                "isPath": false
+            }
+        ],
+        "tests": []
+    }
+]

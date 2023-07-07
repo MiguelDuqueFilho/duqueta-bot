@@ -29,4 +29,5 @@
 ```bash
 $ npm install --save @nestjs/config
 $ npm install --save @nestjs/swagger
+$ npm install --save tmijs
 ```
