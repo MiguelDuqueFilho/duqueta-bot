@@ -1,53 +1,89 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { RefreshingAuthProvider, exchangeCode } from '@twurple/auth';
+import {
+  RefreshingAuthProvider,
+  exchangeCode,
+  AccessToken,
+} from '@twurple/auth';
 import { ChatClient, PrivateMessage } from '@twurple/chat';
-import { promises as fs, existsSync } from 'node:fs';
+// import { promises as fs } from 'node:fs';
+import { PrismaRefreshTokenRepository } from '../../infra/database/repositories/prisma-refreshToken-repository';
+import { ApiClient, HelixUser } from '@twurple/api';
 
 @Injectable()
 export class TwitchChatbotService implements OnModuleInit {
+  logger = new Logger(PrismaRefreshTokenRepository.name);
   private authProvider: RefreshingAuthProvider;
   private chatClient: ChatClient;
+  private apiClient: ApiClient;
+  private accessToken: AccessToken;
 
-  constructor(private config: ConfigService) {
+  constructor(
+    private config: ConfigService,
+    private prismaRefreshTokenRepository: PrismaRefreshTokenRepository,
+  ) {
     // Configurações de autenticação
     this.authProvider = new RefreshingAuthProvider({
       clientId: this.config.get('TWITCH_BOT_CLIENTID'),
       clientSecret: this.config.get('TWITCH_CLIENT_SECRET'),
 
-      onRefresh: async (userId, newTokenData) =>
-        await fs.writeFile(
-          `./src/tokens/tokens.duquetabot.json`,
-          JSON.stringify(newTokenData, null, 4),
-          'utf-8',
-        ),
+      onRefresh: async (userId, newTokenData) => {
+        await this.prismaRefreshTokenRepository.updateAccessToken(
+          userId,
+          newTokenData,
+        );
+        this.logger.debug(
+          `onRefresh(userId: ${userId}, newTokenData: `,
+          newTokenData,
+        );
+      },
+      onRefreshFailure: async (userId) => {
+        await this.prismaRefreshTokenRepository.deleteAccessToken(userId);
+        this.logger.debug(`onRefreshFailure(userId: ${userId}`);
+      },
     });
-
-    // Inicializa o cliente de chat
   }
 
   async onModuleInit() {
-    console.log(
-      `onModuleInit: TWITCH_CHANNEL_NAME: ${this.config.get(
-        'TWITCH_CHANNEL_NAME',
-      )}`,
+    this.accessToken = await this.prismaRefreshTokenRepository.getAccessToken(
+      this.config.get('TWITCH_CHANNEL_NAME'),
     );
 
-    const exists = existsSync(`./src/tokens/tokens.duquetabot.json`);
-    if (!exists) {
-      console.log(`file not exists`);
+    this.logger.debug(`getAccessToken - accessToken`, this.accessToken);
+
+    if (!this.accessToken) {
+      this.logger.debug(
+        `access Token not exist for channel ${this.config.get(
+          'TWITCH_CHANNEL_NAME',
+        )}`,
+      );
       return;
     }
 
-    const tokenData = JSON.parse(
-      await fs.readFile(`./src/tokens/tokens.duquetabot.json`, 'utf-8'),
+    await this.authProvider.addUserForToken(this.accessToken, [`chat`, 'api']);
+
+    this.apiClient = new ApiClient({
+      authProvider: this.authProvider,
+      logger: {
+        minLevel: 'debug',
+      },
+    });
+
+    const userid: HelixUser = await this.apiClient.users.getUserByName(
+      'duquetabot',
     );
 
-    await this.authProvider.addUserForToken(tokenData, [`chat`]);
+    console.log(
+      `TWITCH_BOT_USERNAME: ${this.config.get(
+        'TWITCH_BOT_USERNAME',
+      )}, userid: `,
+      userid.displayName,
+      userid.id,
+    );
 
     this.chatClient = new ChatClient({
       authProvider: this.authProvider,
-      authIntents: [`chatBotFor:#${this.config.get('TWITCH_CHANNEL_NAME')}`],
+      // authIntents: [`chatBotFor:#${this.config.get('TWITCH_CHANNEL_NAME')}`],
       channels: [`#${this.config.get('TWITCH_CHANNEL_NAME')}`],
       logger: {
         minLevel: 'debug',
@@ -62,12 +98,12 @@ export class TwitchChatbotService implements OnModuleInit {
 
   async startChatbot() {
     // Conecta-se ao chat da Twitch
-    await this.chatClient.connect();
+    if (this.accessToken) await this.chatClient.connect();
   }
 
   async stopChatbot() {
     // Desconecta-se do chat da Twitch
-    this.chatClient.quit();
+    if (this.accessToken) this.chatClient.quit();
   }
 
   async handleOnMessage(
@@ -77,44 +113,48 @@ export class TwitchChatbotService implements OnModuleInit {
     msg: PrivateMessage,
   ): Promise<void> {
     // Lógica para tratar as mensagens recebidas
-    console.log(
+    this.logger.debug(
       `handleMessage user: ${user}, channel: ${channel}, message: ${message},`,
       msg,
     );
     await this.chatClient.say(channel, `teste com #miguelduquefilho`);
   }
 
-  async callbackGet(param: any): Promise<any> {
-    console.log(`param: `, param);
-    const { code } = param;
+  async callbackGet(code: string): Promise<AccessToken> {
+    this.logger.debug(`code: `, code);
 
-    const tokenData = await exchangeCode(
+    const accessToken = await exchangeCode(
       this.config.get('TWITCH_BOT_CLIENTID'),
       this.config.get('TWITCH_CLIENT_SECRET'),
       code,
       this.config.get('TWITCH_REDIRECT_URI'),
     );
 
-    console.log(`tokenData: `, tokenData);
+    this.logger.debug(`accessToken: `, accessToken);
 
-    await fs.writeFile(
-      `./src/tokens/tokens.duquetabot.json`,
-      JSON.stringify(tokenData, null, 4),
-      'utf-8',
+    const channel = this.config.get('TWITCH_CHANNEL_NAME');
+
+    await this.prismaRefreshTokenRepository.updateAccessToken(
+      channel,
+      accessToken,
     );
 
-    return tokenData;
+    return accessToken;
   }
 
-  async callbackPost(body: any): Promise<any> {
-    console.log(`body: `, body);
+  // async callbackPost(body: any): Promise<any> {
+  //   this.logger.debug(`body: `, body);
 
-    await fs.writeFile(
-      `./src/tokens/tokens.duquetabot.json`,
-      JSON.stringify(body, null, 4),
-      'utf-8',
-    );
-    console.log(`AccessToken: `, body);
-    return body;
-  }
+  //   // await fs.writeFile(
+  //   //   `./src/tokens/tokens.duquetabot.json`,
+  //   //   JSON.stringify(body, null, 4),
+  //   //   'utf-8',
+  //   // );
+
+  //   const channel = this.config.get('TWITCH_CHANNEL_NAME');
+
+  //   await this.prismaRefreshTokenRepository.updateAccessToken(channel, body);
+  //   this.logger.debug(`AccessToken: `, body);
+  //   return body;
+  // }
 }

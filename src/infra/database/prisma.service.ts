@@ -21,4 +21,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       this.logger.log(`Prisma closed`);
     });
   }
+
+  cleanDb() {
+    return this.$transaction([this.refreshToken.deleteMany()]);
+  }
 }

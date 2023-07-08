@@ -31,11 +31,11 @@
     "@twurple/auth": "^6.2.1",
     "@twurple/chat": "^6.2.1",
     "@twurple/easy-bot": "^6.2.1",
-    "nestjs-zod": "^2.3.3",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "tmi.js": "^1.8.5",
-    "zod": "^3.21.4"
+    "tmi.js": "^1.8.5"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

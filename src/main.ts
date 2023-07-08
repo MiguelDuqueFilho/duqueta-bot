@@ -1,13 +1,31 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { patchNestJsSwagger } from 'nestjs-zod';
 import { PrismaService } from './infra/database/prisma.service';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const logger = new Logger(bootstrap.name);
+
+  const app = await NestFactory.create(AppModule, {
+    logger: ['log', 'error', 'warn', 'debug'],
+  });
+
+  const configService = app.get(ConfigService);
+  const port = configService.get('SERVER_PORT');
+
   const globalPrefix = 'api';
+
   app.setGlobalPrefix(globalPrefix);
+
+  app.enableCors();
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+    }),
+  );
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Duqueta Bot')
@@ -18,11 +36,13 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('/doc', app, document);
-  patchNestJsSwagger();
 
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
 
-  await app.listen(3000);
+  await app.listen(port, async () => {
+    logger.log(`Application is running on: ${await app.getUrl()}`);
+  });
 }
+
 bootstrap();
