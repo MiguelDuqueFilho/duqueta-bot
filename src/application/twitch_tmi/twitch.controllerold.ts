@@ -1,4 +1,4 @@
 import { Controller } from '@nestjs/common';
 
 @Controller('twitch')
-export class TwitchController {}
+export class TwitchControllerold {}

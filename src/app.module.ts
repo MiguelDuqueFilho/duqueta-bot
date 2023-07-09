@@ -1,12 +1,12 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-
 import { ConfigModule } from '@nestjs/config';
 import { LoggerMiddleware } from './middleware/logger.middleware';
+import { PrismaModule } from './infra/database/prisma.module';
+import { EnvironmentValidate } from './infra/environment/environment.validate';
 
 import { TwitchChatbotModule } from './application/twitch_chatbot/twitch.chatbot.module';
-import { PrismaModule } from './infra/database/prisma.module';
-
-import { EnvironmentValidate } from './infra/environment/environment.validate';
+import { TwitchApiModule } from './application/twitch_api/twitch.api.module';
+import { TwitchModule } from './infra/twitch/twitch.module';
 
 @Module({
   imports: [
@@ -16,8 +16,9 @@ import { EnvironmentValidate } from './infra/environment/environment.validate';
       validate: EnvironmentValidate,
     }),
     PrismaModule,
-
+    TwitchModule,
     TwitchChatbotModule,
+    TwitchApiModule,
   ],
 })
 export class AppModule implements NestModule {

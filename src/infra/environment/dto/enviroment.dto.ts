@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 enum EnvironmentMode {
@@ -13,7 +13,7 @@ export class EnviromentDto {
     description: 'mode default development',
     default: 'development',
   })
-  MODE: EnvironmentMode;
+  MODE_ENV: string;
 
   @IsString()
   @ApiProperty({

@@ -8,7 +8,6 @@ export class PrismaRefreshTokenRepository {
   constructor(private prisma: PrismaService) {}
 
   async getAccessToken(channel: string): Promise<AccessToken | null> {
-    this.logger.debug(`getAccessToken(channel: ${channel})`);
     const result = await this.prisma.refreshToken.findUnique({
       where: {
         channel,
@@ -17,12 +16,16 @@ export class PrismaRefreshTokenRepository {
         accessToken: true,
       },
     });
-    this.logger.debug(`result getAccessToken: `, result);
 
     if (result) {
       const accessToken = JSON.parse(result.accessToken) as AccessToken;
       return accessToken;
     }
+
+    this.logger.error(
+      `updateAccessToken(channel: ${channel}, accessToken: not found`,
+    );
+
     return null;
   }
 
@@ -47,8 +50,6 @@ export class PrismaRefreshTokenRepository {
       },
     });
 
-    this.logger.debug(`result updateAccessToken: `, result);
-
     return result;
   }
 
@@ -60,8 +61,6 @@ export class PrismaRefreshTokenRepository {
         channel,
       },
     });
-
-    this.logger.debug(`result deleteAccessToken: `, result);
 
     return result;
   }

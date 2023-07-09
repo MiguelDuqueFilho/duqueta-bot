@@ -13,6 +13,6 @@ export const EnvironmentValidate = (config: Record<string, unknown>) => {
     // console.log(`errors: `, errors);
     throw new Error(errors.toString());
   }
-  // console.log(`validateConfig`, validateConfig);
+
   return validateConfig;
 };

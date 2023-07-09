@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TwitchService } from './twitch.service';
+import { TwitchServiceold } from './twitch.serviceold';
 
 describe('TwitchService', () => {
-  let service: TwitchService;
+  let service: TwitchServiceold;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TwitchService],
+      providers: [TwitchServiceold],
     }).compile();
 
-    service = module.get<TwitchService>(TwitchService);
+    service = module.get<TwitchServiceold>(TwitchServiceold);
   });
 
   it('should be defined', () => {

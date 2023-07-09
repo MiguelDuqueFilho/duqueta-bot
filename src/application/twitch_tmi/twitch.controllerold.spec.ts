@@ -1,16 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TwitchController } from './twitch.controller';
-import { TwitchService } from './twitch.service';
+import { TwitchControllerold } from './twitch.controllerold';
+import { TwitchServiceold } from './twitch.serviceold';
 
 describe('TwitchGateway', () => {
-  let gateway: TwitchController;
+  let gateway: TwitchControllerold;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TwitchController, TwitchService],
+      providers: [TwitchControllerold, TwitchServiceold],
     }).compile();
 
-    gateway = module.get<TwitchController>(TwitchController);
+    gateway = module.get<TwitchControllerold>(TwitchControllerold);
   });
 
   it('should be defined', () => {

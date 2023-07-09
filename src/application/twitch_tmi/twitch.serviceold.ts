@@ -21,8 +21,8 @@ import {
 import { catchConnectError } from './error/catchConnectError';
 
 @Injectable()
-export class TwitchService {
-  private logger = new Logger('TwitchService');
+export class TwitchServiceold {
+  private logger = new Logger('TwitchServiceold');
   private readonly twitchClient: Client;
 
   constructor() {
