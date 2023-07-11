@@ -7,6 +7,7 @@ import { EnvironmentValidate } from './infra/environment/environment.validate';
 import { TwitchChatbotModule } from './application/twitch_chatbot/twitch.chatbot.module';
 import { TwitchApiModule } from './application/twitch_api/twitch.api.module';
 import { TwitchModule } from './infra/twitch/twitch.module';
+import { UsersModule } from './application/users/users.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TwitchModule } from './infra/twitch/twitch.module';
       validate: EnvironmentValidate,
     }),
     PrismaModule,
+    UsersModule,
     TwitchModule,
     TwitchChatbotModule,
     TwitchApiModule,

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TwitchChatbotService } from './twitch.chatbot.service';
-import { PrismaRefreshTokenRepository } from '../../infra/database/repositories/prisma-refreshToken-repository';
+import { PrismaRefreshTokenRepository } from '../../infra/database/repositories/prisma_refreshToken.repository';
 import { TwitchApiService } from '../twitch_api/twitch.api.service';
 
 @Module({

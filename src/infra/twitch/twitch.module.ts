@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { TwitchController } from './twitch.controller';
 import { TwitchService } from './twitch.service';
-import { PrismaRefreshTokenRepository } from '../../infra/database/repositories/prisma-refreshToken-repository';
+import { PrismaRefreshTokenRepository } from '../database/repositories/prisma_refreshToken.repository';
 
 @Global()
 @Module({

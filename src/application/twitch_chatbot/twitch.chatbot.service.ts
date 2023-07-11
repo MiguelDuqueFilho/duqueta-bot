@@ -6,8 +6,8 @@ import {
   AccessToken,
 } from '@twurple/auth';
 import { ChatClient, PrivateMessage } from '@twurple/chat';
-import { PrismaRefreshTokenRepository } from '../../infra/database/repositories/prisma-refreshToken-repository';
-import { ApiClient, HelixUser } from '@twurple/api';
+import { PrismaRefreshTokenRepository } from '../../infra/database/repositories/prisma_refreshToken.repository';
+import { HelixUser } from '@twurple/api';
 import { TwitchService } from '../../infra/twitch/twitch.service';
 import { TwitchApiService } from '../twitch_api/twitch.api.service';
 
@@ -50,7 +50,7 @@ export class TwitchChatbotService implements OnModuleInit {
 
   async startChatbot() {
     // Conecta-se ao chat da Twitch
-    await this.chatClient.connect();
+    // await this.chatClient.connect();
   }
 
   async stopChatbot() {

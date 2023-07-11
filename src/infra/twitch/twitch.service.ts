@@ -6,7 +6,7 @@ import {
   RefreshingAuthProvider,
   exchangeCode,
 } from '@twurple/auth';
-import { PrismaRefreshTokenRepository } from '../database/repositories/prisma-refreshToken-repository';
+import { PrismaRefreshTokenRepository } from '../database/repositories/prisma_refreshToken.repository';
 
 @Injectable()
 export class TwitchService implements OnModuleInit {

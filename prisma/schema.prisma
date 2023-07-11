@@ -14,23 +14,28 @@ model RefreshToken {
   id          String   @id @default(uuid())
   channel     String   @unique()
   accessToken String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 }
 
-// model User {
-//   id    String  @id @default(uuid())
-//   email String  @unique
-//   name  String?
-// }
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  name          String?
+  password_hash String
+  created_at    DateTime @default(now())
 
-// model Viewers {
+  @@map("users")
+}
+
+// model Viewer {
 //   id          String   @id @default(uuid())
 //   user_name   String
 //   role        String // moderador , streamer , viewer ,subscriber , vip
 //   account_age DateTime
 //   follow_age  DateTime
 //   sub_age     DateTime
+//  @@map("viewers)
 // }
 
 // model UserMetrics {
