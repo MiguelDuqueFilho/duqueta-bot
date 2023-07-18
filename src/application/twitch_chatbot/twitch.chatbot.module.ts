@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TwitchChatbotService } from './twitch.chatbot.service';
-import { PrismaRefreshTokenRepository } from '../../infra/database/repositories/prisma_refreshToken.repository';
 import { TwitchApiService } from '../twitch_api/twitch.api.service';
+import { PrismaAccessTokenRepository } from '../../infra/database/repositories/prisma_accessToken.repository';
 
 @Module({
   providers: [
     TwitchChatbotService,
     TwitchApiService,
-    PrismaRefreshTokenRepository,
+    PrismaAccessTokenRepository,
   ],
 })
 export class TwitchChatbotModule {}

@@ -1,12 +1,13 @@
 import { Global, Module } from '@nestjs/common';
 import { TwitchController } from './twitch.controller';
 import { TwitchService } from './twitch.service';
-import { PrismaRefreshTokenRepository } from '../database/repositories/prisma_refreshToken.repository';
+import { PrismaAccessTokenRepository } from '../database/repositories/prisma_accessToken.repository';
+import { PrismaUserRepository } from '../database/repositories/prisma_user.repository';
 
 @Global()
 @Module({
   controllers: [TwitchController],
-  providers: [TwitchService, PrismaRefreshTokenRepository],
+  providers: [TwitchService, PrismaAccessTokenRepository, PrismaUserRepository],
   exports: [TwitchService],
 })
 export class TwitchModule {}

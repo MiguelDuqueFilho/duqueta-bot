@@ -10,7 +10,6 @@ export const EnvironmentValidate = (config: Record<string, unknown>) => {
   const errors = validateSync(validateConfig, { skipMissingProperties: false });
 
   if (errors.length > 0) {
-    // console.log(`errors: `, errors);
     throw new Error(errors.toString());
   }
 

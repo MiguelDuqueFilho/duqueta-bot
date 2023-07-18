@@ -2,11 +2,11 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   RefreshingAuthProvider,
-  exchangeCode,
-  AccessToken,
+  // exchangeCode,
+  // AccessToken,
 } from '@twurple/auth';
 import { ChatClient, PrivateMessage } from '@twurple/chat';
-import { PrismaRefreshTokenRepository } from '../../infra/database/repositories/prisma_refreshToken.repository';
+import { PrismaAccessTokenRepository } from '../../infra/database/repositories/prisma_accessToken.repository';
 import { HelixUser } from '@twurple/api';
 import { TwitchService } from '../../infra/twitch/twitch.service';
 import { TwitchApiService } from '../twitch_api/twitch.api.service';
@@ -20,7 +20,7 @@ export class TwitchChatbotService implements OnModuleInit {
 
   constructor(
     private configService: ConfigService,
-    private prismaRefreshTokenRepository: PrismaRefreshTokenRepository,
+    private prismaAccessTokenRepository: PrismaAccessTokenRepository,
     private twitchService: TwitchService,
     private twitchApiService: TwitchApiService,
   ) {
@@ -28,11 +28,10 @@ export class TwitchChatbotService implements OnModuleInit {
   }
 
   async onModuleInit() {
-    this.userBot = await this.twitchApiService.getUserBot();
+    this.userBot = this.twitchApiService.getUserBot();
 
     this.chatClient = new ChatClient({
       authProvider: this.authProvider,
-      // authIntents: [`chatBotFor:#${this.configService.get('TWITCH_CHANNEL_NAME')}`],
       channels: [`#${this.configService.get('TWITCH_CHANNEL_NAME')}`],
       logger: {
         minLevel: 'debug',
@@ -50,7 +49,7 @@ export class TwitchChatbotService implements OnModuleInit {
 
   async startChatbot() {
     // Conecta-se ao chat da Twitch
-    // await this.chatClient.connect();
+    await this.chatClient.connect();
   }
 
   async stopChatbot() {
@@ -94,23 +93,24 @@ export class TwitchChatbotService implements OnModuleInit {
     await this.chatClient.say(channel, `teste com #handleOnAction`);
   }
 
-  async callbackGet(code: string): Promise<AccessToken> {
-    this.logger.debug(`code: `, code);
+  // async callbackGet(code: string): Promise<AccessToken> {
+  //   this.logger.debug(`callbackGet(code): `, code);
 
-    const accessToken = await exchangeCode(
-      this.configService.get('TWITCH_BOT_CLIENTID'),
-      this.configService.get('TWITCH_CLIENT_SECRET'),
-      code,
-      this.configService.get('TWITCH_REDIRECT_URI'),
-    );
+  //   const accessToken = await exchangeCode(
+  //     this.configService.get('TWITCH_BOT_CLIENTID'),
+  //     this.configService.get('TWITCH_CLIENT_SECRET'),
+  //     code,
+  //     this.configService.get('TWITCH_REDIRECT_URI'),
+  //   );
 
-    this.logger.debug(`accessToken: `, accessToken);
+  //   this.logger.debug(`accessToken: `, accessToken);
 
-    await this.prismaRefreshTokenRepository.updateAccessToken(
-      this.userBot.id,
-      accessToken,
-    );
+  //   await this.prismaAccessTokenRepository.updateAccessToken(
+  //     this.userBot.id,
+  //     accessToken,
+  //     scope
+  //   );
 
-    return accessToken;
-  }
+  //   return accessToken;
+  // }
 }

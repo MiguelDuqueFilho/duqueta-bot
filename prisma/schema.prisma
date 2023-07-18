@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,22 +7,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model RefreshToken {
-  id          String   @id @default(uuid())
-  channel     String   @unique()
-  accessToken String
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-}
-
 model User {
-  id            String   @id @default(uuid())
-  email         String   @unique
-  name          String?
-  password_hash String
-  created_at    DateTime @default(now())
+  id                String       @id @default(uuid())
+  user_id           String       @unique
+  email             String?
+  login             String
+  display_name      String
+  type              String
+  description       String
+  broadcaster_type  String
+  profile_image_url String
+  offline_image_url String
+  view_count        Int
+  twitch_created_at DateTime
+  tokens            AccessToken?
+  created_at        DateTime     @default(now())
 
   @@map("users")
+}
+
+model AccessToken {
+  user_id      String   @unique()
+  access_token String
+  user         User     @relation(fields: [user_id], references: [user_id])
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
 }
 
 // model Viewer {

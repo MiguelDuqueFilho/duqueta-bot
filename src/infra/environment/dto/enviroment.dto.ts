@@ -13,7 +13,7 @@ export class EnviromentDto {
     description: 'mode default development',
     default: 'development',
   })
-  MODE_ENV: string;
+  NODE_ENV: string;
 
   @IsString()
   @ApiProperty({
@@ -65,4 +65,10 @@ export class EnviromentDto {
     description: 'redirect url for credentials twitch',
   })
   TWITCH_REDIRECT_URI: string;
+
+  @IsString()
+  @ApiProperty({
+    description: 'secret credentials for login',
+  })
+  JWT_SECRET: string;
 }

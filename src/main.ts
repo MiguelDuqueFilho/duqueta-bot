@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { PrismaService } from './infra/database/prisma.service';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
@@ -36,9 +35,6 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('/doc', app, document);
-
-  const prismaService = app.get(PrismaService);
-  await prismaService.enableShutdownHooks(app);
 
   await app.listen(port, async () => {
     logger.log(`Application is running on: ${await app.getUrl()}`);
