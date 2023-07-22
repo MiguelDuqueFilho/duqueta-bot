@@ -13,6 +13,7 @@ export class TwitchController {
   @Get('authchat')
   @ApiOkResponse()
   async TwitchChatAuth(@Res() res) {
+    this.logger.verbose(`TwitchChatAuth`, res);
     const redirectUrl = await this.twitchService.getChatAutorizationUrl();
     res.redirect(redirectUrl);
   }
@@ -21,7 +22,7 @@ export class TwitchController {
   @ApiOkResponse()
   @ApiBadRequestResponse()
   callback(@Query() dto: CallbackCodeDto): Promise<AccessToken> {
-    this.logger.debug(`callback:`, dto);
+    this.logger.verbose(`callback:`, dto);
     return this.twitchService.callbackGet(dto);
   }
 }

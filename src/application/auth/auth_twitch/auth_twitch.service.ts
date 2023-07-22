@@ -17,7 +17,7 @@ export class AuthTwitchService {
   ) {}
 
   async getAutorizationUrl() {
-    const client_id = this.configService.get('TWITCH_BOT_CLIENTID');
+    const client_id = this.configService.get('TWITCH_CLIENT_ID');
     const redirect_uri = this.configService.get('TWITCH_REDIRECT_URI');
     const code = 'code';
     const scope = 'user:read:email';
@@ -25,45 +25,6 @@ export class AuthTwitchService {
 
     return autorizationUrl;
   }
-
-  // async signUp(dto: AuthSignUpDto) {
-  //   //* generate password hash
-  //   const saltOrRounds = 6;
-  //   const hash = await bcrypt.hash(dto.password, saltOrRounds);
-  //   delete dto.password;
-
-  //   //* user with same email
-  //   const userWithSameEmail = await this.userService.findUserByEmail(dto);
-  //   console.log(userWithSameEmail);
-
-  //   if (userWithSameEmail) {
-  //     throw new ConflictException('User with same e-mail');
-  //   }
-
-  //   //* save the new user in the db
-  //   const user = await this.userService.create(dto, hash);
-
-  //   return await this.signToken(user.id, user.email);
-  // }
-
-  // async signIn(dto: AuthSignInDto) {
-  //   this.logger.debug('signIn(dto: AuthDto)');
-  //   //* find the user by email
-
-  //   const user = await this.userService.findUserByEmail(dto);
-
-  //   //* if user does not exist throw exception
-  //   if (!user) throw new ForbiddenException('Credentials incorrect');
-
-  //   //* compare password
-  //   const isMatches = await bcrypt.compare(dto.password, user.hash);
-
-  //   //* if password incorrect throw execption
-  //   if (!isMatches) throw new ForbiddenException('Credentials incorrect');
-
-  //   //* send back the user
-  //   return await this.signToken(user.id, user.email);
-  // }
 
   async signInTwitch(dto: AuthSignInTwitchDto) {
     this.logger.debug('signIn(dto: AuthDto)', dto);

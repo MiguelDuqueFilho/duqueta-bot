@@ -87,5 +87,5 @@ export class CreateUserDto {
     description: 'object accessToken',
     example: 0,
   })
-  tokens: object;
+  tokens?: object;
 }

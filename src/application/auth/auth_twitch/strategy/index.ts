@@ -1,1 +1,1 @@
-export * from './twitch.trategy';
+export * from './jwt.strategy';

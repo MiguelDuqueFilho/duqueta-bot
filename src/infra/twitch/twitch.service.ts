@@ -18,7 +18,6 @@ export class TwitchService implements OnModuleInit {
   logger = new Logger(TwitchService.name);
   private authProvider: RefreshingAuthProvider;
   private apiClient: ApiClient;
-  // private userBot: HelixUser;
 
   constructor(
     private configService: ConfigService,
@@ -27,22 +26,23 @@ export class TwitchService implements OnModuleInit {
   ) {
     // Configurações de autenticação
     this.authProvider = new RefreshingAuthProvider({
-      clientId: this.configService.get('TWITCH_BOT_CLIENTID'),
+      clientId: this.configService.get('TWITCH_CLIENT_ID'),
       clientSecret: this.configService.get('TWITCH_CLIENT_SECRET'),
 
       onRefresh: async (userId, newTokenData) => {
-        this.logger.debug(
+        this.logger.verbose(
           `onRefresh(userId: ${userId}, newTokenData: `,
           newTokenData,
         );
-        await this.prismaAccessTokenRepository.updateAccessToken(
+        await this.prismaAccessTokenRepository.saveAccessToken(
           userId,
           newTokenData,
         );
+        this.logger.log(`onRefresh - userId ${userId}`);
       },
       onRefreshFailure: async (userId) => {
-        this.logger.debug(`onRefreshFailure(userId: ${userId}`);
         await this.prismaAccessTokenRepository.deleteAccessToken(userId);
+        this.logger.log(`onRefreshFailure(userId: ${userId}`);
       },
     });
   }
@@ -56,7 +56,7 @@ export class TwitchService implements OnModuleInit {
     });
 
     const userBot: HelixUser = await this.apiClient.users.getUserByName(
-      this.configService.get('TWITCH_BOT_USERNAME'),
+      this.configService.get('TWITCH_CHANNEL_NAME'),
     );
 
     const accessToken: AccessToken =
@@ -73,11 +73,30 @@ export class TwitchService implements OnModuleInit {
     return this.authProvider;
   }
 
+  async getUserTwitchData(
+    accessToken: string,
+  ): Promise<HelixPrivilegedUserData> {
+    this.logger.verbose(`getUserTwitchData(accessToken: ${accessToken}): `);
+
+    const url = 'https://api.twitch.tv/helix/users';
+
+    const response = await axios.get(url, {
+      headers: {
+        'Client-ID': this.configService.get('TWITCH_CLIENT_ID'),
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    console.log(`response: `, response.data.data[0]);
+    return response.data.data[0] as HelixPrivilegedUserData;
+  }
+
   async getChatAutorizationUrl() {
-    const client_id = this.configService.get('TWITCH_BOT_CLIENTID');
+    const client_id = this.configService.get('TWITCH_CLIENT_ID');
     const redirect_uri = this.configService.get('TWITCH_REDIRECT_URI');
     const code = 'code';
-    const scope = 'chat:read+chat:edit+channel:moderate+user:read:email';
+    const scope =
+      'chat:read+chat:edit+channel:moderate+user:read:email+bits:read+user:read:subscriptions+channel:read:subscriptions';
     const autorizationUrl = `https://id.twitch.tv/oauth2/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=${code}&scope=${scope}`;
 
     return autorizationUrl;
@@ -87,13 +106,11 @@ export class TwitchService implements OnModuleInit {
     this.logger.debug(`callbackGet(dto: CallbackCodeDto) = `, dto);
 
     const accessToken = await exchangeCode(
-      this.configService.get('TWITCH_BOT_CLIENTID'),
+      this.configService.get('TWITCH_CLIENT_ID'),
       this.configService.get('TWITCH_CLIENT_SECRET'),
       dto.code,
       this.configService.get('TWITCH_REDIRECT_URI'),
     );
-
-    const stringAccessToken = JSON.stringify(accessToken);
 
     this.logger.debug(`accessToken: `, accessToken);
 
@@ -101,63 +118,23 @@ export class TwitchService implements OnModuleInit {
 
     console.log(twitchData);
 
-    const {
-      id: user_id,
-      created_at: twitch_created_at,
-      ...twitchUser
-    } = twitchData;
+    await this.prismaAccessTokenRepository.saveAccessToken(
+      twitchData.id,
+      accessToken,
+    );
+
+    const { created_at: twitch_created_at, ...twitchUser } = twitchData;
 
     const createUserAndAccessToken: CreateUserDto = {
-      user_id,
+      user_id: twitchData.id,
       ...twitchUser,
       twitch_created_at,
-      tokens: {
-        create: {
-          // user_id,
-          access_token: stringAccessToken,
-        },
-      },
     };
 
     const result = await this.prismaUserRepository.save(
       createUserAndAccessToken,
     );
 
-    // await this.prismaAccessTokenRepository.updateAccessToken(
-    //   this.userBot.id,
-    //   accessToken,
-    // );
-
-    // id: '924876650',
-    //   login: 'duquetabot',
-    //   display_name: 'DuquetaBot',
-    //   type: '',
-    //   broadcaster_type: '',
-    //   description: '',
-    //   profile_image_url: 'https://static-cdn.jtvnw.net/user-default-pictures-uv/de130ab0-def7-11e9-b668-784f43822e80-profile_image-300x300.png',
-    //   offline_image_url: '',
-    //   view_count: 0,
-    //   email: 'wilma@duquebr.com',
-    //   created_at: '2023-06-22T14:34:00Z'
-
     return result;
-  }
-
-  async getUserTwitchData(
-    accessToken: string,
-  ): Promise<HelixPrivilegedUserData> {
-    this.logger.debug(`getUserTwitchData(accessToken: ${accessToken}): `);
-
-    const url = 'https://api.twitch.tv/helix/users';
-
-    const response = await axios.get(url, {
-      headers: {
-        'Client-ID': this.configService.get('TWITCH_BOT_CLIENTID'),
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    console.log(`response: `, response.data.data[0]);
-    return response.data.data[0];
   }
 }

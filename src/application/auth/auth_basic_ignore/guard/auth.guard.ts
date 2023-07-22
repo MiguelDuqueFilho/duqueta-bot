@@ -2,6 +2,7 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
@@ -13,6 +14,7 @@ import { jwtConstants } from '../../constants';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+  logger = new Logger(AuthGuard.name);
   constructor(private jwtService: JwtService, private reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

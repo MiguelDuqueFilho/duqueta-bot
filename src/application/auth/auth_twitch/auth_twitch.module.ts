@@ -6,7 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from '../constants';
 import { AuthTwitchService } from './auth_twitch.service';
 import { PrismaUserRepository } from '../../../infra/database/repositories/prisma_user.repository';
-import { TwitchStrategy } from './strategy/twitch.trategy';
+import { JwtStrategy } from './strategy';
 
 @Module({
   imports: [
@@ -19,7 +19,7 @@ import { TwitchStrategy } from './strategy/twitch.trategy';
     }),
   ],
   controllers: [AuthTwitchController],
-  providers: [AuthTwitchService, TwitchStrategy, PrismaUserRepository],
+  providers: [AuthTwitchService, JwtStrategy, PrismaUserRepository],
   exports: [AuthTwitchService],
 })
 export class AuthTwitchModule {}

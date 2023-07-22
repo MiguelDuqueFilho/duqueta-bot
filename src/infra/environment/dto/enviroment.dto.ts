@@ -46,7 +46,7 @@ export class EnviromentDto {
   @ApiProperty({
     description: 'client id credentials twitch',
   })
-  TWITCH_BOT_CLIENTID: string;
+  TWITCH_CLIENT_ID: string;
 
   @IsString()
   @ApiProperty({

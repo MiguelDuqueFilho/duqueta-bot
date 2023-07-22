@@ -6,9 +6,8 @@ import { EnvironmentValidate } from './infra/environment/environment.validate';
 import { UserModule } from './application/user/user.module';
 import { AuthTwitchModule } from './application/auth/auth_twitch/auth_twitch.module';
 import { TwitchModule } from './infra/twitch/twitch.module';
-
-// import { APP_GUARD } from '@nestjs/core';
-// import { JwtGuard } from './application/auth/guard';
+import { TwitchChatbotModule } from './application/twitch_chatbot/twitch.chatbot.module';
+import { TwitchApiModule } from './application/twitch_api/twitch.api.module';
 
 @Module({
   imports: [
@@ -22,15 +21,9 @@ import { TwitchModule } from './infra/twitch/twitch.module';
     PrismaModule,
     UserModule,
     TwitchModule,
-    // TwitchChatbotModule,
-    // TwitchApiModule,
+    TwitchChatbotModule,
+    TwitchApiModule,
   ],
-  // providers: [
-  //   {
-  //     provide: APP_GUARD,
-  //     useClass: JwtGuard,
-  //   },
-  // ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

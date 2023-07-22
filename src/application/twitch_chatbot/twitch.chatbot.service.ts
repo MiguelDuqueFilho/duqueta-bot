@@ -64,15 +64,18 @@ export class TwitchChatbotService implements OnModuleInit {
     msg: PrivateMessage,
   ): Promise<void> {
     // Lógica para tratar as mensagens recebidas
-    if (user === this.userBot.name) {
-      return;
-    }
+    // if (user === this.userBot.name) {
+    //   return;
+    // }
 
     this.logger.debug(
       `handleOnMessage user: ${user}, channel: ${channel}, message: ${message},`,
       msg,
     );
-    await this.chatClient.say(channel, `teste com #handleOnMessage`);
+    await this.chatClient.say(
+      channel,
+      `teste com #handleOnMessage - channel: ${channel}`,
+    );
   }
 
   async handleOnAction(
@@ -97,7 +100,7 @@ export class TwitchChatbotService implements OnModuleInit {
   //   this.logger.debug(`callbackGet(code): `, code);
 
   //   const accessToken = await exchangeCode(
-  //     this.configService.get('TWITCH_BOT_CLIENTID'),
+  //     this.configService.get('TWITCH_CLIENT_ID'),
   //     this.configService.get('TWITCH_CLIENT_SECRET'),
   //     code,
   //     this.configService.get('TWITCH_REDIRECT_URI'),

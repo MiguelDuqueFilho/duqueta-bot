@@ -31,19 +31,23 @@ export class PrismaAccessTokenRepository {
     return accessToken;
   }
 
-  async updateAccessToken(user_id: string, accessToken: AccessToken) {
-    this.logger.debug(
-      `updateAccessToken(user_id: ${user_id}, accessToken: `,
+  async saveAccessToken(user_id: string, accessToken: AccessToken) {
+    this.logger.verbose(
+      `saveAccessToken(user_id: ${user_id}, accessToken: `,
       accessToken,
     );
 
     const stringAccessToken = JSON.stringify(accessToken);
 
-    const result = await this.prisma.accessToken.update({
+    const result = await this.prisma.accessToken.upsert({
       where: {
         user_id,
       },
-      data: {
+      update: {
+        access_token: stringAccessToken,
+      },
+      create: {
+        user_id,
         access_token: stringAccessToken,
       },
     });
@@ -52,7 +56,7 @@ export class PrismaAccessTokenRepository {
   }
 
   async deleteAccessToken(user_id: string) {
-    this.logger.debug(`deleteAccessToken(user_id: ${user_id}`);
+    this.logger.verbose(`deleteAccessToken(user_id: ${user_id}`);
 
     const result = await this.prisma.accessToken.delete({
       where: {

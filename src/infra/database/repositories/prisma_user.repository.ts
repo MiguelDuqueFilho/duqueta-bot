@@ -16,14 +16,16 @@ export class PrismaUserRepository {
   constructor(private prisma: PrismaService) {}
 
   async save(dto: CreateUserDto): Promise<User> {
-    this.logger.debug('save(dto: any): Promise<User>');
+    this.logger.debug('save(dto: any): Promise<User>', dto);
+
+    const { user_id, ...dtoUpdate } = dto;
 
     const user = await this.prisma.user.upsert({
       where: {
-        user_id: dto.user_id,
+        user_id,
       },
       update: {
-        ...dto,
+        ...dtoUpdate,
       },
       create: {
         ...dto,

@@ -1,7 +1,6 @@
-import { ConfigService } from '@nestjs/config';
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../../user/user.service';
+
 import { jwtConstants } from '../constants';
 
 @Injectable({})
@@ -9,9 +8,8 @@ export class AuthService {
   logger = new Logger(AuthService.name);
 
   constructor(
-    private config: ConfigService,
-    private jwt: JwtService,
-    private userService: UserService,
+    // private config: ConfigService,
+    private jwt: JwtService, // private userService: UserService,
   ) {}
   // async signUp(dto: AuthSignUpDto) {
   //* generate password hash

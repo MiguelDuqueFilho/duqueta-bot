@@ -8,13 +8,14 @@ import {
   Patch,
   Post,
   Req,
+  Request,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthTwitchService } from './auth_twitch.service';
 import { AuthSignInTwitchDto } from './dto';
-import { LocalAuthGuard } from './guard';
+import { JwtAuthGuard, LocalAuthGuard } from './guard';
 
 import { AuthGuard } from '@nestjs/passport';
 
@@ -28,26 +29,35 @@ export class AuthTwitchController {
   @Get()
   async TwitchAuth(@Res() res) {
     const redirectUrl = await this.authTwitchService.getAutorizationUrl();
-    console.log(redirectUrl);
+    this.logger.debug(redirectUrl);
     res.redirect(redirectUrl);
   }
 
-  @HttpCode(HttpStatus.OK)
-  @ApiBody({ type: AuthSignInTwitchDto })
-  @ApiOperation({ summary: 'Login User with twitch' })
-  @ApiResponse({
-    status: 200,
-    description: 'signIn Successfully',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'The user not exists.',
-  })
+  // @HttpCode(HttpStatus.OK)
+  // @ApiBody({ type: AuthSignInTwitchDto })
+  // @ApiOperation({ summary: 'Login User with twitch' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'signIn Successfully',
+  // })
+  // @ApiResponse({
+  //   status: 404,
+  //   description: 'The user not exists.',
+  // })
   @UseGuards(LocalAuthGuard)
-  @Post('signin')
-  signInTwitch(@Body() dto: AuthSignInTwitchDto) {
-    this.logger.debug('signin(@Body() dto: AuthSignInTwitchDto)', dto);
-    return this.authTwitchService.signInTwitch(dto);
+  @Post('login')
+  login(@Request() req) {
+    this.logger.debug('login(@Request() req)', req.user);
+    // return this.authTwitchService.signInTwitch(dto);
+    return req.user;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('profile')
+  profile(@Request() req) {
+    this.logger.debug('profile(@Request() req)', req.user);
+    // return this.authTwitchService.signInTwitch(dto);
+    return req.user;
   }
 
   @HttpCode(HttpStatus.OK)
