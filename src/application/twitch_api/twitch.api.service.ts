@@ -3,8 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { RefreshingAuthProvider } from '@twurple/auth';
 import {
   ApiClient,
-  HelixBitsLeaderboard,
   HelixBitsLeaderboardQuery,
+  HelixPaginatedSubscriptionsResult,
   HelixUser,
   UserIdResolvable,
 } from '@twurple/api';
@@ -39,48 +39,34 @@ export class TwitchApiService implements OnModuleInit {
     const userchannel: string = this.configService.get('TWITCH_CHANNEL_NAME');
     this.userChannel = await this.getUserTwitchByName(userchannel);
     this.logger.debug(
-      `onModuleInit - :  userChannel.id:  ${this.userChannel.id}`,
+      `onModuleInit - :  user Channel.id:  ${this.userChannel.id}`,
     );
 
     //** testes aleatórios das apis */
 
-    const userDuqueta = await this.getUserTwitchByName('miguelduquefilho');
-
-    this.logger.debug(`onModuleInit - :  userDuqueta.id:  ${userDuqueta.id}`);
     this.logger.debug(
-      `onModuleInit - :  user Duqueta.name:  ${userDuqueta.name}`,
+      `onModuleInit - :  user userChannel.name:  ${this.userChannel.name}`,
     );
     this.logger.debug(
-      `onModuleInit - :  user Duqueta.description:  ${userDuqueta.description}`,
+      `onModuleInit - :  user userChannel.description:  ${this.userChannel.description}`,
     );
     this.logger.debug(
-      `onModuleInit - :  user Duqueta.displayName:  ${userDuqueta.displayName}`,
+      `onModuleInit - :  user userChannel.displayName:  ${this.userChannel.displayName}`,
     );
     this.logger.debug(
-      `onModuleInit - :  user Duqueta.creationDate:  ${userDuqueta.creationDate}`,
+      `onModuleInit - :  user userChannel.creationDate:  ${this.userChannel.creationDate}`,
     );
     this.logger.debug(
-      `onModuleInit - :  user Duqueta.profilePictureUrl:  ${userDuqueta.profilePictureUrl}`,
+      `onModuleInit - :  user userChannel.profilePictureUrl:  ${this.userChannel.profilePictureUrl}`,
     );
     this.logger.debug(
-      `onModuleInit - :  user Duqueta.offlinePlaceholderUrl:  ${userDuqueta.offlinePlaceholderUrl}`,
+      `onModuleInit - :  user userChannel.offlinePlaceholderUrl:  ${this.userChannel.offlinePlaceholderUrl}`,
     );
     this.logger.debug(
-      `onModuleInit - :  user Duqueta.type:  ${userDuqueta.type}`,
+      `onModuleInit - :  user userChannel.type:  ${this.userChannel.type}`,
     );
     this.logger.debug(
-      `onModuleInit - :  user Duqueta.broadcasterType:  ${userDuqueta.broadcasterType}`,
-    );
-    this.logger.debug(
-      `onModuleInit - :  user Duqueta.getFollows(): `,
-      (await userDuqueta.getFollows()).total,
-    );
-
-    const userLeaders = await this.getBitsGetLeaderboard(`508732373`);
-    this.logger.debug(
-      `onModuleInit - :  userLeaders.getFollows(): `,
-      userLeaders.entries,
-      userLeaders.totalCount,
+      `onModuleInit - :  user userChannel.broadcasterType:  ${this.userChannel.broadcasterType}`,
     );
   }
 
@@ -110,14 +96,28 @@ export class TwitchApiService implements OnModuleInit {
   //! BITS:
   // getLeaderboard;
   async getBitsGetLeaderboard(broadcaster: UserIdResolvable): Promise<{
-    entries: HelixBitsLeaderboard['entries'];
-    totalCount: HelixBitsLeaderboard['totalCount'];
+    entries: any;
+    totalCount: number;
   }> {
-    const params: HelixBitsLeaderboardQuery = { count: 6 };
-    const bits = await this.apiClient.bits.getLeaderboard(broadcaster, params);
+    const params: HelixBitsLeaderboardQuery = { count: 10 };
+    const resultBits = await this.apiClient.bits.getLeaderboard(
+      broadcaster,
+      params,
+    );
+
     return {
-      entries: bits.entries,
-      totalCount: bits.totalCount,
+      entries: [
+        resultBits?.entries.map((item) => {
+          return {
+            rank: item.rank,
+            userId: item.userId,
+            userName: item.userName,
+            userDisplayName: item.userDisplayName,
+            amount: item.amount,
+          };
+        }),
+      ],
+      totalCount: resultBits?.totalCount,
     };
   }
 
@@ -132,27 +132,6 @@ export class TwitchApiService implements OnModuleInit {
         user,
         broadcaster,
       );
-
-    return {
-      broadcasterId: subscriptions?.broadcasterId,
-      broadcasterName: subscriptions?.broadcasterName,
-      broadcasterDisplayName: subscriptions?.broadcasterDisplayName,
-      broadcasterUser: subscriptions?.getBroadcaster(),
-      isGift: subscriptions?.isGift,
-      tier: subscriptions?.tier,
-    };
-  }
-  //! SUBSCRIPTION:
-  //! checkUserSubscription not work;
-  async getSubscriptionForUser(
-    user: UserIdResolvable,
-    broadcaster: UserIdResolvable,
-  ): Promise<any> {
-    const subscriptions =
-      await this.apiClient.subscriptions.getSubscriptionForUser(
-        broadcaster,
-        user,
-      );
     console.log(subscriptions);
     return {
       broadcasterId: subscriptions?.broadcasterId,
@@ -163,12 +142,59 @@ export class TwitchApiService implements OnModuleInit {
       tier: subscriptions?.tier,
     };
   }
+  //! SUBSCRIPTION:
+  //! getSubscriptionForUser return nothing;
+  async getSubscriptionForUser(
+    user: UserIdResolvable,
+    broadcaster: UserIdResolvable,
+  ): Promise<any> {
+    const subscriptions =
+      await this.apiClient.subscriptions.getSubscriptionForUser(
+        broadcaster,
+        user,
+      );
+
+    return {
+      broadcasterId: subscriptions?.broadcasterId,
+      broadcasterName: subscriptions?.broadcasterName,
+      broadcasterDisplayName: subscriptions?.broadcasterDisplayName,
+      isGift: subscriptions?.isGift,
+      tier: subscriptions?.tier,
+      userId: subscriptions?.userId,
+      userName: subscriptions?.userName,
+      userDisplayName: subscriptions?.userDisplayName,
+      gifterId: subscriptions?.gifterId,
+      gifterName: subscriptions?.gifterName,
+      gifterDisplayName: subscriptions?.gifterDisplayName,
+    };
+  }
+  //! SUBSCRIPTION:
+  //! getSubscriptions
+  async getSubscriptions(broadcaster: UserIdResolvable): Promise<any> {
+    const subscriptions: HelixPaginatedSubscriptionsResult =
+      await this.apiClient.subscriptions.getSubscriptions(broadcaster);
+    console.log(subscriptions);
+    return {
+      data: [
+        subscriptions?.data.map((item) => {
+          return {
+            broadcasterId: item.broadcasterId,
+            broadcasterName: item.broadcasterName,
+            broadcasterDisplayName: item.broadcasterDisplayName,
+            userId: item.userId,
+            userName: item.userName,
+            userDisplayName: item.userDisplayName,
+          };
+        }),
+      ],
+      cursor: subscriptions?.cursor,
+      total: subscriptions?.total,
+      points: subscriptions?.points,
+    };
+  }
 }
 
 //! SUBSCRIPTION:
-
-// getSubscriptionForUser //!not implemented;
-// getSubscriptions; //!not implemented;
 // getSubscriptionsForUsers; //!not implemented;
 // getSubscriptionsPaginated; //!not implemented;
 

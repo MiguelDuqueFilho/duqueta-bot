@@ -21,7 +21,7 @@ import { TwitchApiModule } from './application/twitch_api/twitch.api.module';
     PrismaModule,
     UserModule,
     TwitchModule,
-    TwitchChatbotModule,
+    // TwitchChatbotModule,
     TwitchApiModule,
   ],
 })

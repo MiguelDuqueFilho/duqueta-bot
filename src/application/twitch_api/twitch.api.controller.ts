@@ -25,7 +25,9 @@ export class TwitchApiController {
   async checkUserSubscription() {
     return await this.twitchApiService.checkUserSubscription(
       this.twitchApiService.getUserChannel(),
-      this.twitchApiService.getUserBot(),
+      (
+        await this.twitchApiService.getUserTwitchByName('fearfulandelus')
+      ).id,
     );
   }
 
@@ -36,14 +38,26 @@ export class TwitchApiController {
   @ApiOkResponse()
   async getSubscriptionForUser() {
     return await this.twitchApiService.getSubscriptionForUser(
-      this.twitchApiService.getUserBot(),
-      this.twitchApiService.getUserChannel(),
+      (
+        await this.twitchApiService.getUserTwitchByName('Wiseprincess')
+      ).id,
+      this.twitchApiService.getUserChannel().id,
+    );
+  }
+  //! SUBSCRIPTION:
+  // getSubscriptions;
+  @Get('getSubscriptions')
+  @ApiOperation({ summary: 'api twitch getSubscriptions' })
+  @ApiOkResponse()
+  async getSubscriptions() {
+    return await this.twitchApiService.getSubscriptions(
+      this.twitchApiService.getUserChannel().id,
     );
   }
 }
 
 //! SUBSCRIPTION:
-// getSubscriptionForUser;
+
 // getSubscriptions;
 // getSubscriptionsForUsers;
 // getSubscriptionsPaginated;

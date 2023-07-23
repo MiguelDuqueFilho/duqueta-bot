@@ -116,13 +116,6 @@ export class TwitchService implements OnModuleInit {
 
     const twitchData = await this.getUserTwitchData(accessToken.accessToken);
 
-    console.log(twitchData);
-
-    await this.prismaAccessTokenRepository.saveAccessToken(
-      twitchData.id,
-      accessToken,
-    );
-
     const { created_at: twitch_created_at, ...twitchUser } = twitchData;
 
     const createUserAndAccessToken: CreateUserDto = {
@@ -133,6 +126,11 @@ export class TwitchService implements OnModuleInit {
 
     const result = await this.prismaUserRepository.save(
       createUserAndAccessToken,
+    );
+
+    await this.prismaAccessTokenRepository.saveAccessToken(
+      twitchData.id,
+      accessToken,
     );
 
     return result;
