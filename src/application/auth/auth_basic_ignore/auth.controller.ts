@@ -41,14 +41,14 @@ export class AuthController {
   // })
   // @Post('signin')
   // signIn(@Body() dto: AuthSignInDto) {
-  //   this.logger.debug('signin(@Body() dto: AuthSignInDto)', dto);
+  //   this.logger.verbose('signin(@Body() dto: AuthSignInDto)', dto);
   //   return this.authService.signIn(dto);
   // }
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Refresh Token' })
   @Patch('token/refresh')
   refresh() {
-    this.logger.debug('refresh()');
+    this.logger.verbose('refresh()');
     return;
   }
 }

@@ -27,7 +27,7 @@ export class AuthTwitchService {
   }
 
   async signInTwitch(dto: AuthSignInTwitchDto) {
-    this.logger.debug('signIn(dto: AuthDto)', dto);
+    this.logger.verbose('signIn(dto: AuthDto)', dto);
   }
 
   async signToken(

@@ -13,7 +13,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   // async validate(username: string, password: string): Promise<any> {
   async validate(payload: any) {
-    this.logger.debug(
+    this.logger.verbose(
       `validate(payload: { sub: string; email: string }) :`,
       payload,
     );

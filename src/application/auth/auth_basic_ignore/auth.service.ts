@@ -28,7 +28,7 @@ export class AuthService {
   // }
 
   // async signIn(dto: AuthSignInDto) {
-  // this.logger.debug('signIn(dto: AuthDto)');
+  // this.logger.verbose('signIn(dto: AuthDto)');
   // //* find the user by email
   // const user = await this.userService.findUserByEmail(dto);
   // //* if user does not exist throw exception

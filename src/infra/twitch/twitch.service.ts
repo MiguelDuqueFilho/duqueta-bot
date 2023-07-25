@@ -103,7 +103,7 @@ export class TwitchService implements OnModuleInit {
   }
 
   async callbackGet(dto: CallbackCodeDto): Promise<any> {
-    this.logger.debug(`callbackGet(dto: CallbackCodeDto) = `, dto);
+    this.logger.verbose(`callbackGet(dto: CallbackCodeDto) = `, dto);
 
     const accessToken = await exchangeCode(
       this.configService.get('TWITCH_CLIENT_ID'),
@@ -112,7 +112,7 @@ export class TwitchService implements OnModuleInit {
       this.configService.get('TWITCH_REDIRECT_URI'),
     );
 
-    this.logger.debug(`accessToken: `, accessToken);
+    this.logger.verbose(`accessToken: `, accessToken);
 
     const twitchData = await this.getUserTwitchData(accessToken.accessToken);
 

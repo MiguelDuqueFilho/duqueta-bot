@@ -16,7 +16,7 @@ export class PrismaUserRepository {
   constructor(private prisma: PrismaService) {}
 
   async save(dto: CreateUserDto): Promise<User> {
-    this.logger.debug('save(dto: any): Promise<User>', dto);
+    this.logger.verbose('save(dto: any): Promise<User>', dto);
 
     const { user_id, ...dtoUpdate } = dto;
 
@@ -36,7 +36,7 @@ export class PrismaUserRepository {
   }
 
   async update(userId: string, dto: UpdateUserDto): Promise<User> {
-    this.logger.debug(
+    this.logger.verbose(
       'update(userId: number, dto: EditUserDto): Promise<User>',
     );
     const user = await this.prisma.user.update({

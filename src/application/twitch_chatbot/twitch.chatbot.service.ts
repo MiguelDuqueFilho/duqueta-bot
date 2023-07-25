@@ -34,7 +34,7 @@ export class TwitchChatbotService implements OnModuleInit {
       authProvider: this.authProvider,
       channels: [`#${this.configService.get('TWITCH_CHANNEL_NAME')}`],
       logger: {
-        minLevel: 'debug',
+        minLevel: '',
       },
     });
 
@@ -68,14 +68,14 @@ export class TwitchChatbotService implements OnModuleInit {
     //   return;
     // }
 
-    this.logger.debug(
+    this.logger.verbose(
       `handleOnMessage user: ${user}, channel: ${channel}, message: ${message},`,
       msg,
     );
-    await this.chatClient.say(
-      channel,
-      `teste com #handleOnMessage - channel: ${channel}`,
-    );
+    // await this.chatClient.say(
+    //   channel,
+    //   `teste com #handleOnMessage - channel: ${channel}`,
+    // );
   }
 
   async handleOnAction(
@@ -89,31 +89,10 @@ export class TwitchChatbotService implements OnModuleInit {
       return;
     }
 
-    this.logger.debug(
+    this.logger.verbose(
       `handleOnAction user: ${user}, channel: ${channel}, message: ${message},`,
       msg,
     );
-    await this.chatClient.say(channel, `teste com #handleOnAction`);
+    // await this.chatClient.say(channel, `teste com #handleOnAction`);
   }
-
-  // async callbackGet(code: string): Promise<AccessToken> {
-  //   this.logger.debug(`callbackGet(code): `, code);
-
-  //   const accessToken = await exchangeCode(
-  //     this.configService.get('TWITCH_CLIENT_ID'),
-  //     this.configService.get('TWITCH_CLIENT_SECRET'),
-  //     code,
-  //     this.configService.get('TWITCH_REDIRECT_URI'),
-  //   );
-
-  //   this.logger.debug(`accessToken: `, accessToken);
-
-  //   await this.prismaAccessTokenRepository.updateAccessToken(
-  //     this.userBot.id,
-  //     accessToken,
-  //     scope
-  //   );
-
-  //   return accessToken;
-  // }
 }

@@ -29,7 +29,7 @@ export class AuthTwitchController {
   @Get()
   async TwitchAuth(@Res() res) {
     const redirectUrl = await this.authTwitchService.getAutorizationUrl();
-    this.logger.debug(redirectUrl);
+    // this.logger.verbose(redirectUrl);
     res.redirect(redirectUrl);
   }
 
@@ -47,7 +47,7 @@ export class AuthTwitchController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req) {
-    this.logger.debug('login(@Request() req)', req.user);
+    this.logger.verbose('login(@Request() req)', req.user);
     // return this.authTwitchService.signInTwitch(dto);
     return req.user;
   }
@@ -55,7 +55,7 @@ export class AuthTwitchController {
   @UseGuards(JwtAuthGuard)
   @Post('profile')
   profile(@Request() req) {
-    this.logger.debug('profile(@Request() req)', req.user);
+    this.logger.verbose('profile(@Request() req)', req.user);
     // return this.authTwitchService.signInTwitch(dto);
     return req.user;
   }
@@ -64,14 +64,14 @@ export class AuthTwitchController {
   @ApiOperation({ summary: 'Refresh Token' })
   @Patch('token/twitch/refresh')
   refresh() {
-    this.logger.debug('token/twitch/refresh - refresh()');
+    this.logger.verbose('token/twitch/refresh - refresh()');
     return;
   }
 
   @Get('callback')
   @UseGuards(AuthGuard('twitch'))
   async AuthTwitchCallback(@Req() req: Request, @Res() res: Response) {
-    this.logger.debug('AuthTwitchCallback() ', req, res);
+    this.logger.verbose('AuthTwitchCallback() ', req, res);
 
     // const refreshToken = generateRefreshToken()
     // this.authTwitchService.storeRefreshToken(refreshToken)

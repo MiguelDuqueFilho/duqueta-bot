@@ -6,7 +6,6 @@ import { EnvironmentValidate } from './infra/environment/environment.validate';
 import { UserModule } from './application/user/user.module';
 import { AuthTwitchModule } from './application/auth/auth_twitch/auth_twitch.module';
 import { TwitchModule } from './infra/twitch/twitch.module';
-import { TwitchChatbotModule } from './application/twitch_chatbot/twitch.chatbot.module';
 import { TwitchApiModule } from './application/twitch_api/twitch.api.module';
 
 @Module({

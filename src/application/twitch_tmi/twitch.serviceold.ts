@@ -127,15 +127,15 @@ export class TwitchServiceold {
   }
 
   private reconnect() {
-    this.logger.debug(`twitch reconnect`);
+    this.logger.verbose(`twitch reconnect`);
   }
 
   private ping() {
-    this.logger.debug(`twitch ping...`);
+    this.logger.verbose(`twitch ping...`);
   }
 
   private pong(latency: number) {
-    this.logger.debug(`twitch pong... latency: ${latency}`);
+    this.logger.verbose(`twitch pong... latency: ${latency}`);
   }
 
   //! functions of events about events of twitch
@@ -152,7 +152,7 @@ export class TwitchServiceold {
         return;
       }
       case 'JOIN': {
-        this.logger.debug(`twitch raw_message -  command: ${command}`);
+        this.logger.verbose(`twitch raw_message -  command: ${command}`);
       }
       default: {
         this.logger.verbose(
@@ -183,7 +183,7 @@ export class TwitchServiceold {
     self: boolean,
   ) {
     if (self) return;
-    this.logger.debug(
+    this.logger.verbose(
       `twitch action - channel:${channel}, userstate: ${userstate}, userstate['display-name']: ${userstate['display-name']}, message: ${message}`,
     );
   }
@@ -193,7 +193,7 @@ export class TwitchServiceold {
     username: string,
     userstate: AnonSubGiftUpgradeUserstate,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch anongiftpaidupgrade - channel:${channel}, username: ${username}, userstate: ${userstate}, userstate['display-name']: ${userstate['display-name']}`,
     );
   }
@@ -204,7 +204,7 @@ export class TwitchServiceold {
     methods: SubMethods,
     userstate: AnonSubMysteryGiftUserstate,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch anonsubmysterygift - channel: ${channel}, numbOfSubs: ${numbOfSubs}, methods: ${methods}, userstate: ${userstate}`,
     );
   }
@@ -216,7 +216,7 @@ export class TwitchServiceold {
     methods: SubMethods,
     userstate: AnonSubGiftUserstate,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch anonsubgift - channel: ${channel}, streakMonths: ${streakMonths}, recipient: ${recipient}, methods: ${methods}, userstate: ${userstate}`,
     );
   }
@@ -226,7 +226,7 @@ export class TwitchServiceold {
     msgID: 'msg_rejected' | 'msg_rejected_mandatory',
     message: string,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch automod - channel: ${channel}, msgID: ${msgID}, message: ${message}`,
     );
   }
@@ -237,7 +237,7 @@ export class TwitchServiceold {
     reason: string,
     userstate: BanUserstate,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch ban - channel: ${channel}, username: ${username}, reason: ${reason}, userstate: ${userstate}`,
     );
   }
@@ -250,33 +250,33 @@ export class TwitchServiceold {
   ) {
     if (self) return;
 
-    this.logger.debug(
+    this.logger.verbose(
       `twitch chat - channel: ${channel}, userstate: ${userstate}, message: ${message}`,
       userstate,
     );
   }
 
   private cheer(channel: string, userstate: ChatUserstate, message: string) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch cheer channel: ${channel}, userstate: ${userstate}, message: ${message}`,
     );
   }
 
   private clearchat(channel: string) {
-    this.logger.debug(`twitch clearchat - channel ${channel} `);
+    this.logger.verbose(`twitch clearchat - channel ${channel} `);
   }
 
   private emoteonly(channel: string, enabled: boolean) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch emoteonly - channel: ${channel}, enabled: ${enabled}`,
     );
   }
   private emotesets(sets: string, obj: EmoteObj) {
-    this.logger.debug(`twitch emotesets sets: ${sets}, EmoteObj: ${obj}`);
+    this.logger.verbose(`twitch emotesets sets: ${sets}, EmoteObj: ${obj}`);
   }
 
   private followersonly(channel: string, enabled: boolean, length: number) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch followersonly - channel: ${channel}, enabled: ${enabled}, lenght: ${length}`,
     );
   }
@@ -286,7 +286,7 @@ export class TwitchServiceold {
     sender: string,
     userstate: SubGiftUpgradeUserstate,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch giftpaidupgrade - channel: ${channel}, username: ${username}, sender: ${sender}, userstate: ${userstate}`,
     );
   }
@@ -297,26 +297,26 @@ export class TwitchServiceold {
     viewers: number,
     autohost: boolean,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch hosted - channel: ${channel}, username: ${username}, viewers: ${viewers}, autohost: ${autohost}`,
     );
   }
 
   private hosting(channel: string, target: string, viewers: number) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch hosting - channel: ${channel}, target: ${target}, viewers: ${viewers}`,
     );
   }
 
   private join(channel: string, username: string, self: boolean) {
     if (self) return;
-    this.logger.debug(
+    this.logger.verbose(
       `twitch join - channel: ${channel}, username: ${username}`,
     );
   }
 
   private logon() {
-    this.logger.debug(`twitch logon`);
+    this.logger.verbose(`twitch logon`);
   }
 
   private message(
@@ -327,7 +327,7 @@ export class TwitchServiceold {
   ) {
     if (self) return;
 
-    this.logger.debug(
+    this.logger.verbose(
       `twitch message -  channel: ${channel}, userstate: ${userstate}, message: ${message}`,
     );
 
@@ -347,25 +347,25 @@ export class TwitchServiceold {
     deletedMessage: string,
     userstate: DeleteUserstate,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch messagedeleted -  channel: ${channel}, username: ${username}, deletedMessage: ${deletedMessage}, userstate: ${userstate}`,
     );
   }
 
   private mod(channel: string, username: string) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch mod - channel: ${channel}, username: ${username}`,
     );
   }
 
   private mods(channel: string, mods: string[]) {
-    this.logger.debug(`twitch mods - channel: ${channel}, mods: ${mods}`);
+    this.logger.verbose(`twitch mods - channel: ${channel}, mods: ${mods}`);
   }
 
   private part(channel: string, username: string, self: boolean) {
     if (self) return;
 
-    this.logger.debug(
+    this.logger.verbose(
       `twitch part - channel: ${channel}, username: ${username}`,
     );
   }
@@ -376,19 +376,19 @@ export class TwitchServiceold {
     methods: SubMethods,
     userstate: PrimeUpgradeUserstate,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch primepaidupgrade - channel: ${channel}, username: ${username}, methods: ${methods}, userstate: ${userstate}`,
     );
   }
 
   private r9kbeta(channel: string, enabled: boolean) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch r9kbeta - channel: ${channel}, enabled: ${enabled}`,
     );
   }
 
   private raided(channel: string, username: string, viewers: number) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch raided - channel: ${channel}, username: ${username}, viewers: ${viewers}`,
     );
   }
@@ -399,7 +399,7 @@ export class TwitchServiceold {
     rewardType: 'highlighted-message' | 'skip-subs-mode-message' | string,
     tags: ChatUserstate,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch redeem -  channel: ${channel}, username: ${username}, rewardType: ${rewardType}, tags: ${tags}`,
     );
   }
@@ -412,24 +412,24 @@ export class TwitchServiceold {
     userstate: SubUserstate,
     methods: SubMethods,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch resub - channel: ${channel}, username: ${username}, months: ${months}, message: ${message}, userstate: ${userstate}, methods: ${methods}`,
     );
   }
 
   private roomstate(channel: string, state: RoomState) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch roomstate - channel: ${channel}, state: ${state}`,
       state,
     );
   }
 
   private serverchange(channel: string) {
-    this.logger.debug(`twitch serverchange - channel: ${channel}`);
+    this.logger.verbose(`twitch serverchange - channel: ${channel}`);
   }
 
   private slowmode(channel: string, enabled: boolean, length: number) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch slowmode - channel: ${channel}, enabled: ${enabled}, length: ${length}`,
     );
   }
@@ -442,7 +442,7 @@ export class TwitchServiceold {
     methods: SubMethods,
     userstate: SubGiftUserstate,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch subgift - channel: ${channel}, username: ${username}, streakMonths: ${streakMonths}, recipient: ${recipient}, methods: ${methods}, userstate: ${userstate}`,
     );
   }
@@ -454,13 +454,13 @@ export class TwitchServiceold {
     methods: SubMethods,
     userstate: SubMysteryGiftUserstate,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch submysterygift - channel: ${channel}, username: ${username}, numbOfSubs: ${numbOfSubs}, methods: ${methods}, userstate: ${userstate}`,
     );
   }
 
   private subscribers(channel: string, enabled: boolean) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch subscribers - channel: ${channel}, enabled: ${enabled}`,
     );
   }
@@ -472,7 +472,7 @@ export class TwitchServiceold {
     message: string,
     userstate: SubUserstate,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch subscription - channel: ${channel}, username: ${username}, methods: ${methods}, message: ${message}, userstate: ${userstate}`,
     );
   }
@@ -484,25 +484,25 @@ export class TwitchServiceold {
     duration: number,
     userstate: TimeoutUserstate,
   ) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch timeout - channel: ${channel}, username: ${username}, reason: ${reason}, duration: ${duration}, userstate: ${userstate},`,
     );
   }
 
   private unhost(channel: string, viewers: number) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch unhost - channel: ${channel}, viewers: ${viewers}`,
     );
   }
 
   private unmod(channel: string, username: string) {
-    this.logger.debug(
+    this.logger.verbose(
       `twitch unmod - channel: ${channel}, username: ${username}`,
     );
   }
 
   private vips(channel: string, vips: string[]) {
-    this.logger.debug(`twitch vips - channel: ${channel}, vips: ${vips}`);
+    this.logger.verbose(`twitch vips - channel: ${channel}, vips: ${vips}`);
   }
 
   private whisper(
@@ -513,7 +513,7 @@ export class TwitchServiceold {
   ) {
     if (self) return;
 
-    this.logger.debug(
+    this.logger.verbose(
       `twitch whisper - from: ${from}, userstate: ${userstate}, message: ${message}`,
     );
   }
